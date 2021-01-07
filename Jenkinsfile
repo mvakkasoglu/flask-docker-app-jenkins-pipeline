@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        REGISTRY_CREDENTIAL = "dockerhub"
         DOCKER_HUB_REPO = "vakkasoglu/test"
         CONTAINER_NAME = "flask-container"
         STUB_VALUE = "200"
@@ -21,9 +22,11 @@ pipeline {
                 sh 'docker image tag $DOCKER_HUB_REPO:latest $DOCKER_HUB_REPO:$BUILD_NUMBER'
 
                 //  Pushing Image to Repository
+                //  Pushing Image to Repository
+			    docker.withRegistry( '', REGISTRY_CREDENTIAL ) {
                 sh 'docker push vakkasoglu/test:$BUILD_NUMBER'
                 sh 'docker push vakkasoglu/test:latest'
-                
+                }
                 echo "Image built and pushed to repository"
             }
         }
